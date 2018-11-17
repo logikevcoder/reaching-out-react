@@ -8,12 +8,13 @@ import './Blog.css';
 class Blog extends Component {
     state = {
         posts: [], // initial state
-        selectedPostId: null
+        selectedPostId: null,
+        err: false
     }
 
     // using this lifecycle method as it's a passing function used for axios
     componentDidMount() {
-        axios.get('https://jsonplaceholder.typicode.com/posts') // get the data from this api
+        axios.get('https://jsonplaceholder.typicode.com/post') // get the data from this api
         .then(response => {
             const posts = response.data.slice(0, 4); // only store the first 4 returned items
             const updatedPosts = posts.map(post => {
@@ -23,6 +24,9 @@ class Blog extends Component {
                 }
             });
             this.setState({posts: updatedPosts}) // set the apis response data to be the posts array items
+        })
+        .catch(err => { 
+            this.setState({err: true})
         });
     }
 
@@ -32,13 +36,16 @@ class Blog extends Component {
 
     render () {
         // create variable that maps over returned posts array and creates a dynamic component
-        const posts = this.state.posts.map((post) => {
-            return <Post 
-                      key={post.id} 
-                      title={post.title} 
-                      author={post.author}
-                      clicked={() => this.postClickHandler(post.id)} /> // pass in id of the post that was clicked to the function above
-        })
+        let posts = <p style={{textAlign: 'center'}}>Something went wrong</p>; // err handler
+        if (!this.state.err) { // render the posts if err state is false
+            posts = this.state.posts.map((post) => {
+                return <Post 
+                          key={post.id} 
+                          title={post.title} 
+                          author={post.author}
+                          clicked={() => this.postClickHandler(post.id)} /> // pass in id of the post that was clicked to the function above
+            })
+        }
 
         return (
             <div>
