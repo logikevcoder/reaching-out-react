@@ -14,7 +14,7 @@ class Blog extends Component {
 
     // using this lifecycle method as it's a passing function used for axios
     componentDidMount() {
-        axios.get('https://jsonplaceholder.typicode.com/post') // get the data from this api
+        axios.get('https://jsonplaceholder.typicode.com/posts') // get the data from this api
         .then(response => {
             const posts = response.data.slice(0, 4); // only store the first 4 returned items
             const updatedPosts = posts.map(post => {
